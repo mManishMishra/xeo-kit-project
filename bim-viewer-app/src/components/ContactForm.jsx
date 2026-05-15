@@ -13,7 +13,8 @@ const ContactForm = ({ isOpen, onClose }) => {
 
     try {
       // Standardized API request structure for clean data handling
-      const response = await fetch('/api/contact', {
+      const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+const response = await fetch(`${API_BASE_URL}/api/contact`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

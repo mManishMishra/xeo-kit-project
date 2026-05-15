@@ -181,7 +181,8 @@ const BIMViewer = ({ file, onDelete, onAdd }) => {
       formData.append('ifcFile', file);
       formData.append('angle', angle);
 
-      const response = await fetch('http://localhost:3000/api/render', {
+     const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+const response = await fetch(`${API_BASE_URL}/api/render`, {
         method: 'POST',
         body: formData,
       });
