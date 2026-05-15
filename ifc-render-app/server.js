@@ -41,11 +41,16 @@ app.post('/api/render', upload.single('ifcFile'), (req, res) => {
     execSync(`node aps-pipeline.js ${angle} "./jobs/${jobId}"`, { stdio: 'inherit' });
 
     // 5. Return the URL format so React knows how to display it
-    if (angle === '360') {
-       res.json({ type: '360', url: `http://localhost:3000/jobs/${jobId}/360_viewer.html` });
-    } else {
-       res.json({ type: 'image', url: `http://localhost:3000/jobs/${jobId}/result.png` });
-    }
+   // Automatically detect if we are on Render (https) or local (http)
+const protocol = req.headers['x-forwarded-proto'] || req.protocol;
+const host = req.headers.host; // This will be 'xeo-kit-project.onrender.com' in production
+const baseUrl = `${protocol}://${host}`;
+
+if (angle === '360') {
+   res.json({ type: '360', url: `${baseUrl}/jobs/${jobId}/360_viewer.html` });
+} else {
+   res.json({ type: 'image', url: `${baseUrl}/jobs/${jobId}/result.png` });
+}
 
   } catch (error) {
     console.error("Render API Error:", error.message);
